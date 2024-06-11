@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper(
     componentModel = "spring",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-    uses = {TagMapper.class}
+    uses = {TagMapper.class, OfficeLocationMapper.class}
 )
 public interface JobPostMapper {
     JobPostMapper INSTANCE = Mappers.getMapper(JobPostMapper.class);

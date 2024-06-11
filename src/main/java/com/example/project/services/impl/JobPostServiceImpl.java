@@ -8,6 +8,7 @@ import com.example.project.mapper.JobPostMapper;
 import com.example.project.model.Jobpost;
 import com.example.project.model.Tag;
 import com.example.project.repository.JobpostRepository;
+import com.example.project.repository.OfficeLocationRepository;
 import com.example.project.repository.TagRepository;
 import com.example.project.services.JobPostService;
 import java.time.LocalDateTime;
@@ -22,22 +23,30 @@ public class JobPostServiceImpl implements JobPostService {
     private final JobpostRepository jobpostRepository;
     private final TagRepository tagRepository;
     private final JobPostMapper jobPostMapper;
+    private final OfficeLocationRepository officeLocationRepository;
 
     @Autowired
     public JobPostServiceImpl(
         JobpostRepository jobpostRepository,
         TagRepository tagRepository,
-        JobPostMapper jobPostMapper
+        JobPostMapper jobPostMapper,
+        OfficeLocationRepository officeLocationRepository
     ) {
         this.jobpostRepository = jobpostRepository;
         this.tagRepository = tagRepository;
         this.jobPostMapper = jobPostMapper;
+        this.officeLocationRepository = officeLocationRepository;
     }
 
     @Override
     public ResponseTemplate<JobPostResponse> createJobPost(JobPostRequest data) {
         List<Tag> tags = tagRepository.findAllById(data.getTagId());
         Jobpost jobpost = jobPostMapper.toJobPostEntity(data);
+
+        jobpost.setOfficeLocation(officeLocationRepository.findById(
+            data.getOfficeLocationId()).orElseThrow(() -> new ResourceNotFoundException(
+                "Office Location not found with ID: %s".formatted(data.getOfficeLocationId())
+        )));
 
         LocalDateTime now = LocalDateTime.now();
         jobpost.setCreatedAt(now);
@@ -58,7 +67,6 @@ public class JobPostServiceImpl implements JobPostService {
     public ResponseTemplate<JobPostResponse> updateJobPost(Long id, JobPostRequest jobPostRequest){
         Jobpost jobpost = jobpostRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Job Post not found with id: %s".formatted(id)));
         LocalDateTime now = LocalDateTime.now();
-        jobpost.setCreatedAt(now);
         jobpost.setUpdatedAt(now);
 
         Jobpost savedJobPost = jobpostRepository.save(jobpost);
@@ -69,6 +77,18 @@ public class JobPostServiceImpl implements JobPostService {
         if(jobPostRequest.getJobDescription() != null){
             jobpost.setJobDescription(jobPostRequest.getJobDescription().trim());
         }
+
+        if (jobPostRequest.getOfficeLocationId() != null) {
+            jobpost.setOfficeLocation(
+                officeLocationRepository.findById(jobPostRequest.getOfficeLocationId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                        "Office location not found with ID: %s".formatted(
+                            jobPostRequest.getOfficeLocationId()
+                        )
+                    ))
+            );
+        }
+
         if(jobPostRequest.getPosition() != null){
             jobpost.setPosition(jobPostRequest.getPosition().trim());
         }
@@ -91,10 +111,8 @@ public class JobPostServiceImpl implements JobPostService {
         if(jobPostRequest.getStartDate() != null){
             jobpost.setStartDate(jobPostRequest.getStartDate());
         }
-        jobpost.setUpdatedAt(LocalDateTime.now());
 
         Jobpost updatedJobPost = jobpostRepository.save(jobpost);
-
 
         return ResponseTemplate.<JobPostResponse>builder()
             .code(HttpStatus.OK.value())

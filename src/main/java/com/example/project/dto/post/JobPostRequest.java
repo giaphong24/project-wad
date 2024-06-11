@@ -21,6 +21,8 @@ public class JobPostRequest implements Serializable {
     @NotBlank(message = "Job tile is required")
     private String jobTitle;
 
+    private Long officeLocationId;
+
     private String position;
 
     private String requirements;

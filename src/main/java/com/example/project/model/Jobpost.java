@@ -26,7 +26,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "jobpost")
+@Table(
+    name = "jobpost",
+    uniqueConstraints = @UniqueConstraint(
+        name = "jobPost_pk",
+        columnNames = "id")
+)
 public class Jobpost implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +39,10 @@ public class Jobpost implements Serializable {
 
     @Column(name = "job_title", nullable = false, columnDefinition = "TEXT")
     private String jobTitle;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private OfficeLocation officeLocation;
 
     @Column(name = "position", nullable = false, columnDefinition = "TEXT")
     private String position;
@@ -77,7 +86,7 @@ public class Jobpost implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, jobTitle, position, requirements, typeOfEmployment, salaryRange,
+        return Objects.hash(id, jobTitle, officeLocation, position, requirements, typeOfEmployment, salaryRange,
             contactInformation, jobDescription, startDate, createdAt, updatedAt, tags);
     }
 
@@ -85,6 +94,7 @@ public class Jobpost implements Serializable {
         return "JobPost{" +
             "id=" + id +
             ", jobTitle=" + jobTitle +
+            ", officeLocation=" + officeLocation +
             ", position=" + position +
             ", requirements=" + requirements +
             ", typeOfEmployment=" + typeOfEmployment +

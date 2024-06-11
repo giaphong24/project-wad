@@ -20,6 +20,7 @@ import lombok.Setter;
 public class JobPostResponse implements Serializable {
     private Long id;
     private String jobTitle;
+    private OfficeLocationDto officeLocation;
     private String position;
     private String requirements;
     private String typeOfEmployment;
