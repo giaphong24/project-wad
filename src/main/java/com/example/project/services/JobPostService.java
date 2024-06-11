@@ -8,5 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface JobPostService {
     ResponseTemplate<JobPostResponse> createJobPost(JobPostRequest data);
+    ResponseTemplate<JobPostResponse> updateJobPost(Long id, JobPostRequest jobPostRequest);
+    ResponseTemplate<JobPostResponse> deleteJobPost(Long id);
 
 }
