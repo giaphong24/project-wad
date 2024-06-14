@@ -7,7 +7,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +28,19 @@ public class OfficeLocationController {
         ResponseTemplate<OfficeLocationDto> response = officeLocationService
             .createOfficeLocation(officeLocationDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<ResponseTemplate<OfficeLocationDto>> updateOfficeLocation(
+        @PathVariable Long id,
+        @RequestBody @Valid OfficeLocationDto officeLocationDto
+    ){
+        ResponseTemplate<OfficeLocationDto> updatedOfficeLocation = officeLocationService.updateOfficeLocation(id, officeLocationDto);
+        return ResponseEntity.ok(updatedOfficeLocation);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseTemplate<OfficeLocationDto>> deleteOfficeLocation(@PathVariable Long id){
+        ResponseTemplate<OfficeLocationDto> deletedOfficeLocation = officeLocationService.deleteOfficeLocation(id);
+        return ResponseEntity.ok(deletedOfficeLocation);
     }
 
 }

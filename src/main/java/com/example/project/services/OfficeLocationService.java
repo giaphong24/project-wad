@@ -7,5 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface OfficeLocationService {
     ResponseTemplate<OfficeLocationDto> createOfficeLocation(OfficeLocationDto officeLocationDto);
+    ResponseTemplate<OfficeLocationDto> updateOfficeLocation(Long id, OfficeLocationDto officeLocationDto);
+    ResponseTemplate<OfficeLocationDto> deleteOfficeLocation(Long id);
 
 }

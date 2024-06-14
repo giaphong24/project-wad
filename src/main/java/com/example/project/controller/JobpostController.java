@@ -35,7 +35,7 @@ public class JobpostController {
     private final JobPostService jobPostService;
 
     @GetMapping({"", "/"})
-    public String showProductList (Model model) {
+    public String showJobPostList (Model model) {
         List<Jobpost> jobPosts = jobpostRepository.findAll();
         model.addAttribute("jobPosts", jobPosts);
         return "jobposts/index";
