@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/jobposts")
+@RequestMapping("api/v1/jobposts")
 public class JobpostController {
     private final JobpostRepository jobpostRepository;
 
