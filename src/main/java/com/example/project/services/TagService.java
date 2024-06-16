@@ -7,5 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TagService {
     ResponseTemplate<TagDto> createTag(TagDto tagDto);
+    ResponseTemplate<TagDto> deleteTag(Long id);
 
 }

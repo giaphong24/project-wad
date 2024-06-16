@@ -2,6 +2,7 @@ package com.example.project.services.impl;
 
 import com.example.project.dto.TagDto;
 import com.example.project.dto.template.ResponseTemplate;
+import com.example.project.exception.ResourceNotFoundException;
 import com.example.project.mapper.TagMapper;
 import com.example.project.model.Tag;
 import com.example.project.repository.TagRepository;
@@ -25,6 +26,18 @@ public class TagServiceImpl implements TagService {
             .code(HttpStatus.CREATED.value())
             .message("Successfully created new tag!")
             .data(tagMapper.toTagDto(savedTag))
+            .build();
+    }
+
+    @Override
+    public ResponseTemplate<TagDto> deleteTag(Long id) {
+        Tag tag = tagRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Tag cannot be found with id: " + id));
+
+        tagRepository.delete(tag);
+        return ResponseTemplate.<TagDto>builder()
+            .code(HttpStatus.OK.value())
+            .message("Tag deleted successfully!")
             .build();
     }
 }
